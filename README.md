@@ -1,4 +1,4 @@
-# sistema-gestion-clientes-mqueen
+
 # Sistema de Gestión de Clientes Mqueen
 
 Repositorio del equipo para el proyecto integrador de la asignatura **Proyecto Integrador I (E-PIN1-1)**.
