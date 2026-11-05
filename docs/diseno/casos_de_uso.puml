@@ -1,0 +1,35 @@
+@startuml casos_de_uso
+' Diagrama de casos de uso - Sistema de Gestión de Clientes Mqueen (A08)
+left to right direction
+skinparam monochrome true
+skinparam packageStyle rectangle
+
+actor "Administrador\n(único usuario)" as ADM
+
+rectangle "Sistema de Gestión de Clientes Mqueen" {
+  usecase "CU-01 Iniciar sesión" as CU01
+  usecase "CU-02 Gestionar refacciones\n(alta, edición, consulta)" as CU02
+  usecase "CU-03 Registrar orden de servicio\ny descontar refacciones" as CU03
+  usecase "CU-04 Validar existencia\nde refacciones" as CU04
+  usecase "CU-05 Actualizar estado de\nalerta de stock" as CU05
+  usecase "CU-06 Consultar alertas de\nstock mínimo" as CU06
+  usecase "CU-07 Registrar cliente\ny vehículo" as CU07
+  usecase "CU-08 Consultar historial\nde servicios" as CU08
+  usecase "CU-09 Reabastecer refacción\n(registrar entrada)" as CU09
+  usecase "CU-10 Buscar cliente\n(nombre o placa)" as CU10
+}
+
+ADM -- CU02
+ADM -- CU09
+ADM -- CU06
+ADM -- CU07
+ADM -- CU08
+ADM -- CU03
+
+CU02 ..> CU01 : <<include>>
+CU03 ..> CU01 : <<include>>
+CU03 ..> CU04 : <<include>>
+CU05 ..> CU03 : <<extend>>
+CU05 ..> CU09 : <<extend>>
+CU08 ..> CU10 : <<include>>
+@enduml

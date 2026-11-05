@@ -1,0 +1,37 @@
+digraph G {
+  graph [fontname="DejaVu Sans", nodesep=0.35, ranksep=0.32, splines=ortho, bgcolor=white, dpi=170];
+  node  [fontname="DejaVu Sans", fontsize=10, color=black, penwidth=1.2, margin="0.12,0.05"];
+  edge  [fontname="DejaVu Sans", fontsize=9, arrowsize=0.7, penwidth=1.0];
+  ini [shape=oval, label="Inicio"];
+  p0 [shape=box, label="intentos ← 0\nacceso ← Falso"];
+  w [shape=diamond, label="¿intentos < 3 y\nacceso = Falso?", margin="0.02,0.02"];
+  in [shape=parallelogram, label="Leer usuario,\ncontraseña"];
+  bus [shape=box, label="registro ← buscarUsuario(usuario)"];
+  ok [shape=diamond, label="¿registro existe y\nverificarHash(contraseña,\nregistro.hash)?", margin="0.02,0.02"];
+  acc [shape=box, label="acceso ← Verdadero"];
+  inc [shape=box, label="intentos ← intentos + 1"];
+  m1 [shape=parallelogram, label="Mostrar \"Usuario o\ncontraseña incorrectos\""];
+  a [shape=diamond, label="¿acceso =\nVerdadero?", margin="0.02,0.02"];
+  blq [shape=box, label="bloquear(usuario, 5 min)"];
+  m2 [shape=parallelogram, label="Mostrar \"Cuenta bloqueada\n5 minutos\""];
+  ses [shape=box, label="abrirSesion(usuario)"];
+  pa [shape=parallelogram, label="Mostrar panel\nprincipal"];
+  fin [shape=oval, label="Fin"];
+  ini -> p0 [];
+  p0 -> w [];
+  w -> in [xlabel="Sí", ];
+  in -> bus [];
+  bus -> ok [];
+  ok -> acc [xlabel="Sí", ];
+  ok -> inc [xlabel="No", ];
+  inc -> m1 [];
+  acc -> w [constraint=false];
+  m1 -> w [constraint=false];
+  w -> a [xlabel="No", ];
+  a -> blq [xlabel="No", ];
+  blq -> m2 [];
+  a -> ses [xlabel="Sí", ];
+  ses -> pa [];
+  pa -> fin [];
+  m2 -> fin [];
+}

@@ -1,0 +1,31 @@
+digraph G {
+  graph [fontname="DejaVu Sans", nodesep=0.35, ranksep=0.32, splines=ortho, bgcolor=white, dpi=170];
+  node  [fontname="DejaVu Sans", fontsize=10, color=black, penwidth=1.2, margin="0.12,0.05"];
+  edge  [fontname="DejaVu Sans", fontsize=9, arrowsize=0.7, penwidth=1.0];
+  ini [shape=oval, label="Inicio"];
+  p0 [shape=box, label="lista ← vacía\nrefacciones ← obtenerRefacciones()\nn ← longitud(refacciones)\ni ← 1"];
+  w [shape=diamond, label="¿i <= n?", margin="0.02,0.02"];
+  c [shape=diamond, label="¿refacciones[i].stock <=\nrefacciones[i].stockMinimo?", margin="0.02,0.02"];
+  si [shape=box, label="agregar(lista, refacciones[i])\nrefacciones[i].alerta ← Verdadero"];
+  no [shape=box, label="refacciones[i].alerta ← Falso"];
+  inc [shape=box, label="i ← i + 1"];
+  v [shape=diamond, label="¿lista vacía?", margin="0.02,0.02"];
+  m1 [shape=parallelogram, label="Mostrar \"No hay refacciones\nen stock mínimo\""];
+  ord [shape=box, label="ordenar(lista) por stock\nascendente"];
+  m2 [shape=parallelogram, label="Mostrar lista destacada\nen rojo en el panel"];
+  fin [shape=oval, label="Fin"];
+  ini -> p0 [];
+  p0 -> w [];
+  w -> c [xlabel="Sí", ];
+  c -> si [xlabel="Sí", ];
+  c -> no [xlabel="No", ];
+  si -> inc [];
+  no -> inc [];
+  inc -> w [constraint=false];
+  w -> v [xlabel="No", ];
+  v -> m1 [xlabel="Sí", ];
+  v -> ord [xlabel="No", ];
+  ord -> m2 [];
+  m1 -> fin [];
+  m2 -> fin [];
+}
