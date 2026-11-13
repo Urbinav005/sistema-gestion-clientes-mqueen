@@ -1,0 +1,15 @@
+# Archivos que git no debe subir: entornos, credenciales y cachés.
+# Sirve para el backend (Python) y el frontend (Node).
+
+# Entorno virtual de Python
+.venv/
+
+# Credenciales (nunca se suben)
+.env
+
+# Cachés de Python y pytest
+__pycache__/
+.pytest_cache/
+
+# Dependencias del frontend
+node_modules/
