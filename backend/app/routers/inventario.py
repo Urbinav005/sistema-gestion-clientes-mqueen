@@ -1,5 +1,5 @@
 # Endpoints del inventario: lista con búsqueda y filtro, resumen, consulta, alta, edición y baja.
-# Aplica las reglas RN-01 a RN-05. Los textos se guardan sin acentos (la ñ se conserva).
+# Aplica las reglas RN-01 a RN-05 y RN-16. Los textos se guardan sin acentos (la ñ se conserva).
 from decimal import Decimal
 
 from fastapi import APIRouter, Depends
@@ -19,6 +19,10 @@ LARGO_NOMBRE = 100
 LARGO_DESCRIPCION = 255
 TOPE_CANTIDAD = 999999
 TOPE_PRECIO = Decimal("99999999.99")
+
+# RN-16: una pieza es critica si esta agotada o tiene la mitad del minimo o menos.
+# Se escribe una sola vez y la usan el filtro y el resumen.
+ES_CRITICO = (Pieza.cantidad == 0) | (Pieza.cantidad * 2 <= Pieza.stock_minimo)
 
 
 def limpiar_y_validar(datos):
@@ -84,6 +88,7 @@ def buscar_pieza(db, id_pieza):
 def listar_inventario(
     buscar: str | None = None,
     stock_bajo: bool | None = None,
+    estado_stock: str | None = None,
     db: Session = Depends(get_db),
 ):
     consulta = select(Pieza).order_by(Pieza.nombre)
@@ -103,6 +108,19 @@ def listar_inventario(
     elif stock_bajo is False:
         consulta = consulta.where(Pieza.cantidad > Pieza.stock_minimo)
 
+    # RN-16: filtro por nivel de stock, hecho en la consulta
+    if estado_stock is not None:
+        nivel = estado_stock.strip().lower()
+        if nivel == "critico":
+            consulta = consulta.where(ES_CRITICO)
+        elif nivel == "bajo":
+            consulta = consulta.where((Pieza.cantidad <= Pieza.stock_minimo) & ~ES_CRITICO)
+        elif nivel == "suficiente":
+            consulta = consulta.where(Pieza.cantidad > Pieza.stock_minimo)
+        elif nivel != "":
+            mensaje = "El filtro de estado solo acepta: suficiente, bajo o critico"
+            raise ErrorApi(400, mensaje, [{"campo": "estado_stock", "mensaje": mensaje}])
+
     return db.scalars(consulta).all()
 
 
@@ -114,6 +132,8 @@ def resumen_inventario(db: Session = Depends(get_db)):
     stock_bajo = db.scalar(
         select(func.count(Pieza.id_pieza)).where(Pieza.cantidad <= Pieza.stock_minimo)
     )
+    # RN-16: las criticas se cuentan en la base; bajo y suficiente salen por resta
+    critico = db.scalar(select(func.count(Pieza.id_pieza)).where(ES_CRITICO))
     # RN-05: valor del inventario = suma de cantidad × precio_unitario
     valor = db.scalar(
         select(func.coalesce(func.sum(Pieza.cantidad * Pieza.precio_unitario), 0))
@@ -122,6 +142,10 @@ def resumen_inventario(db: Session = Depends(get_db)):
         "total_piezas": total_piezas,
         "stock_bajo": stock_bajo,
         "valor_inventario": Decimal(valor).quantize(Decimal("0.01")),
+        # Toda pieza critica tiene stock bajo, asi que la resta es exacta
+        "suficiente": total_piezas - stock_bajo,
+        "bajo": stock_bajo - critico,
+        "critico": critico,
     }
 
 

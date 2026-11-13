@@ -208,10 +208,17 @@ No hay triggers en el esquema.
 | ID | Regla | Estado |
 |---|---|---|
 | RN-01 | No se puede descontar más piezas de las que hay en existencia (`cantidad` nunca queda negativa). | ✅ `CHECK (cantidad >= 0)`. Aun así, la app valida antes para responder "Stock insuficiente" en vez de un error de la base. |
-| RN-02 | Si `cantidad <= stock_minimo`, la pieza se marca como **Stock bajo** y se genera una alerta. | 🟡 Es un cálculo, no se guarda. |
+| RN-02 | Si `cantidad <= stock_minimo`, la pieza se marca como **Stock bajo** y se genera una alerta. | 🟡 Es un cálculo, no se guarda. RN-16 separa esa alerta en dos niveles. |
 | RN-03 | `precio_unitario` debe ser mayor a 0. | 🟡 La base solo exige `>= 0` (permite precio 0). El "mayor a 0" lo valida la app. |
 | RN-04 | `cantidad` y `stock_minimo` no pueden ser negativos. | ✅ `CHECK (... >= 0)` en ambas columnas. La app valida antes para dar un mensaje claro. |
 | RN-05 | Valor del inventario = Σ(`cantidad` × `precio_unitario`). | 🟡 Cálculo |
+| RN-16 | Cada pieza tiene un **nivel de stock**: **Crítico** si está agotada (`cantidad = 0`) o si `cantidad <= stock_minimo / 2`; **Stock bajo** si no es crítico y `cantidad <= stock_minimo`; **Suficiente** en cualquier otro caso. | 🟡 Es un cálculo, no una columna (agregada el 2026-11-13). |
+
+Notas de RN-16:
+- Detalla a RN-02, no la reemplaza: toda pieza en Crítico o en Stock bajo cumple `cantidad <= stock_minimo`, así que sigue contando como alerta de stock bajo.
+- Para no usar decimales, "`cantidad <= stock_minimo / 2`" se calcula como `cantidad * 2 <= stock_minimo`.
+- Ejemplo con `stock_minimo = 6`: de 0 a 3 piezas es Crítico, de 4 a 6 es Stock bajo y de 7 en adelante es Suficiente.
+- Con `stock_minimo = 0`, la pieza es Crítico solo cuando está agotada.
 
 ### Citas y ticket
 | ID | Regla | Estado |

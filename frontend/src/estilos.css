@@ -1,0 +1,665 @@
+/* Estilos de todo el frontend: colores de los mockups como variables,
+   barra lateral, login, tarjetas, tabla, etiquetas de stock y formularios. */
+
+:root {
+  --barra: #172130;
+  --barra-activa: #243045;
+  --acento: #f56329;
+  --acento-oscuro: #dc5420;
+  --fondo: #f5f7fa;
+  --tarjeta: #ffffff;
+  --tabla-encabezado: #f7fafc;
+  --verde-fondo: #e3f5eb;
+  --amarillo-fondo: #fcf5de;
+  --rojo-fondo: #fcebeb;
+  --azul-fondo: #e8f2fc;
+
+  /* Tomados a ojo del mockup */
+  --verde-texto: #1e7a46;
+  --amarillo-texto: #9a6a00;
+  --rojo-texto: #b42323;
+  --azul-texto: #1f5fae;
+  --texto: #172130;
+  --texto-gris: #6b7585;
+  --borde: #e4e8ee;
+  --texto-barra-gris: #9aa5b5;
+
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--texto);
+  background: var(--fondo);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fondo);
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+.texto-gris {
+  color: var(--texto-gris);
+}
+
+/* ---------- Botones y enlaces ---------- */
+
+.boton {
+  display: inline-block;
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.boton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.boton-principal {
+  background: var(--acento);
+  color: #ffffff;
+}
+
+.boton-principal:hover:not(:disabled) {
+  background: var(--acento-oscuro);
+}
+
+.boton-secundario {
+  background: var(--tarjeta);
+  color: var(--texto);
+  border-color: var(--borde);
+}
+
+.boton-secundario:hover {
+  background: var(--tabla-encabezado);
+}
+
+.boton-ancho {
+  width: 100%;
+  text-align: left;
+}
+
+.enlace {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--acento);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.enlace:hover {
+  text-decoration: underline;
+}
+
+.enlace-peligro {
+  color: var(--rojo-texto);
+}
+
+/* ---------- Marca (logo AG) ---------- */
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--acento);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.logo-grande {
+  width: 52px;
+  height: 52px;
+  font-size: 22px;
+}
+
+.marca-nombre {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.marca-sub {
+  color: var(--texto-barra-gris);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+
+/* ---------- Layout ---------- */
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.barra-lateral {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 230px;
+  height: 100vh;
+  padding: 20px 16px;
+  background: var(--barra);
+  color: #ffffff;
+}
+
+.barra-lateral .marca {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #3a4558;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  padding-top: 24px;
+}
+
+.menu-titulo {
+  margin: 0 8px 12px;
+  color: var(--texto-barra-gris);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.menu-opcion {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-left: 3px solid transparent;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.menu-opcion:hover {
+  background: var(--barra-activa);
+}
+
+.menu-opcion.activa {
+  background: var(--barra-activa);
+  border-left-color: var(--acento);
+}
+
+.menu-icono {
+  width: 16px;
+  text-align: center;
+}
+
+.admin {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid #3a4558;
+}
+
+.admin-iniciales {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--barra-activa);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-nombre {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.admin-sub {
+  color: var(--texto-barra-gris);
+  font-size: 11px;
+}
+
+.layout-principal {
+  flex: 1;
+  min-width: 0;
+}
+
+.barra-superior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 28px;
+  background: var(--tarjeta);
+  border-bottom: 1px solid var(--borde);
+}
+
+.barra-superior-ubicacion {
+  color: var(--texto-gris);
+  font-size: 14px;
+}
+
+.barra-superior-usuario {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.barra-superior-nombre {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.barra-superior .boton {
+  padding: 7px 14px;
+}
+
+.contenido {
+  padding: 28px;
+}
+
+/* ---------- Páginas ---------- */
+
+.pagina-encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.pagina-titulo {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--barra);
+}
+
+.pagina-subtitulo {
+  margin-top: 6px;
+  color: var(--texto-gris);
+  font-size: 14px;
+}
+
+.tarjeta {
+  padding: 20px;
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+}
+
+.tarjeta-titulo {
+  margin-bottom: 14px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* ---------- Tarjetas de resumen ---------- */
+
+.tarjetas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.tarjeta-resumen-encabezado {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tarjeta-resumen-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.tarjeta-resumen-titulo {
+  color: var(--texto-gris);
+  font-size: 13px;
+}
+
+.tarjeta-resumen-valor {
+  margin-top: 10px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.tarjeta-resumen-subtitulo {
+  margin-top: 6px;
+  min-height: 15px;
+  color: var(--texto-gris);
+  font-size: 12px;
+}
+
+.tono-azul {
+  background: var(--azul-fondo);
+  color: var(--azul-texto);
+}
+
+.tono-verde {
+  background: var(--verde-fondo);
+  color: var(--verde-texto);
+}
+
+.tono-amarillo {
+  background: var(--amarillo-fondo);
+  color: var(--amarillo-texto);
+}
+
+.tono-rojo {
+  background: var(--rojo-fondo);
+  color: var(--rojo-texto);
+}
+
+/* ---------- Buscador y filtro ---------- */
+
+.filtros {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filtros-buscar {
+  flex: 1;
+  max-width: 420px;
+}
+
+/* ---------- Tabla ---------- */
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.tabla th {
+  padding: 12px 14px;
+  background: var(--tabla-encabezado);
+  color: var(--texto-gris);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.tabla td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--borde);
+  vertical-align: middle;
+}
+
+.producto-nombre {
+  font-weight: 600;
+}
+
+.producto-descripcion {
+  margin-top: 2px;
+  color: var(--texto-gris);
+  font-size: 12px;
+}
+
+.acciones {
+  white-space: nowrap;
+}
+
+.acciones .enlace + .enlace {
+  margin-left: 14px;
+}
+
+/* ---------- Etiquetas de stock (RN-16) ---------- */
+
+.etiqueta {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.etiqueta-suficiente {
+  background: var(--verde-fondo);
+  color: var(--verde-texto);
+}
+
+.etiqueta-bajo {
+  background: var(--amarillo-fondo);
+  color: var(--amarillo-texto);
+}
+
+.etiqueta-critico {
+  background: var(--rojo-fondo);
+  color: var(--rojo-texto);
+}
+
+/* ---------- Mensajes ---------- */
+
+.mensaje {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.mensaje-error {
+  background: var(--rojo-fondo);
+  color: var(--rojo-texto);
+}
+
+.mensaje-exito {
+  background: var(--verde-fondo);
+  color: var(--verde-texto);
+}
+
+/* ---------- Campos de formulario ---------- */
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--texto);
+  font: inherit;
+  font-size: 14px;
+}
+
+select {
+  width: auto;
+  min-width: 160px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--acento);
+  outline-offset: -1px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.campo-etiqueta {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.campo-error {
+  color: var(--rojo-texto);
+  font-size: 12px;
+}
+
+.campo-ayuda {
+  color: var(--texto-gris);
+  font-size: 12px;
+}
+
+/* ---------- Formulario de refacción ---------- */
+
+.formulario {
+  max-width: 820px;
+  padding: 28px;
+}
+
+.formulario .pagina-subtitulo {
+  margin-bottom: 22px;
+}
+
+.formulario-rejilla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+}
+
+.campo-completo {
+  grid-column: 1 / -1;
+}
+
+.aviso-nivel {
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.aviso-bajo {
+  background: var(--amarillo-fondo);
+  color: var(--amarillo-texto);
+}
+
+.aviso-critico {
+  background: var(--rojo-fondo);
+  color: var(--rojo-texto);
+}
+
+.formulario-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+/* ---------- Login ---------- */
+
+.login {
+  display: flex;
+  min-height: 100vh;
+}
+
+.login-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  padding: 56px 64px;
+  overflow: hidden;
+  background: var(--barra);
+  color: #ffffff;
+}
+
+/* Círculo decorativo del mockup */
+.login-panel::after {
+  content: '';
+  position: absolute;
+  right: -80px;
+  bottom: -160px;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: var(--barra-activa);
+}
+
+.login-lema {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.login-lema h1 {
+  max-width: 300px;
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+.login-lema p {
+  max-width: 300px;
+  margin-top: 20px;
+  color: #d5dbe4;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.login-formulario {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  padding: 40px;
+  background: var(--tarjeta);
+}
+
+.login-formulario form {
+  width: 100%;
+  max-width: 460px;
+}
+
+.login-formulario h2 {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.login-formulario .texto-gris {
+  margin: 8px 0 32px;
+}
+
+.login-formulario .boton-ancho {
+  margin-top: 18px;
+  padding: 13px 14px;
+}
+
+.login-olvido {
+  margin-top: 28px;
+  color: var(--texto-gris);
+  font-size: 12px;
+}

@@ -103,6 +103,16 @@ class Pieza(Base):
         # RN-02: hay stock bajo cuando la cantidad es menor o igual al stock mínimo
         return self.cantidad <= self.stock_minimo
 
+    @property
+    def estado_stock(self):
+        # RN-16: critico si esta agotada o tiene la mitad del minimo o menos
+        if self.cantidad == 0 or self.cantidad * 2 <= self.stock_minimo:
+            return "critico"
+        # RN-16: bajo si no es critico y no pasa del minimo
+        if self.cantidad <= self.stock_minimo:
+            return "bajo"
+        return "suficiente"
+
 
 class CitaPieza(Base):
     """Una fila de citas_inventario: una pieza usada en una cita (renglón del ticket)."""

@@ -11,7 +11,7 @@ Repositorio del equipo para el proyecto integrador de la asignatura **Proyecto I
 Aplicación web para el **Taller Mecánico Auto Green** que gestiona el inventario de refacciones y lo relaciona con clientes, vehículos y citas de servicio. Solo hay un tipo de usuario: el administrador.
 
 - **Backend:** Python, FastAPI, SQLAlchemy y PostgreSQL. Está en `backend/`.
-- **Frontend:** React con Vite (pendiente).
+- **Frontend:** React con Vite. Está en `frontend/`.
 - **Documentación técnica:** en `docs/`.
 
 ## Integrantes y roles
@@ -46,8 +46,9 @@ Trabajamos con la metodología ágil **Scrum**, organizando el trabajo en sprint
 
 - `/portafolio`: documentos y evidencias de las actividades (por ejemplo, el acta de integración del equipo).
 - `/backend`: la API del sistema (`app/`) y sus pruebas automáticas (`tests/`).
+- `/frontend`: la aplicación web en React (`src/`): páginas, componentes y llamadas a la API.
 - `/docs`: documentación técnica.
-  - `database.md`: modelo de datos y reglas de negocio (RN-01 a RN-15).
+  - `database.md`: modelo de datos y reglas de negocio (RN-01 a RN-16).
   - `requisitos.md`: requisitos funcionales y su trazabilidad.
   - `arquitectura.md`: capas, convenciones de la API y lista de endpoints.
   - `diseno/`: diagramas del diseño funcional.
@@ -108,6 +109,28 @@ Pide el nombre, el usuario y la contraseña (dos veces). La contraseña no se ve
   2. Botón **Authorize** (arriba a la derecha), pega el token y acepta.
   3. Ya puedes probar las demás rutas. Sin token responden `401`.
 
+## Cómo levantar el frontend (Windows, PowerShell)
+
+Requisitos:
+
+- Node.js 22.12 o superior (incluye `npm`).
+- El backend encendido en http://localhost:8000 y el administrador ya creado.
+
+En otra terminal, desde la raíz del repositorio:
+
+```powershell
+cd frontend
+npm install          # solo la primera vez
+npm run dev
+```
+
+Abre http://localhost:5173 e inicia sesión con el usuario y la contraseña del administrador.
+
+- La aplicación siempre usa el puerto **5173**: es el único que la API autoriza (CORS). Si está ocupado, `npm run dev` se detiene con un error en vez de usar otro puerto.
+- La sesión se guarda solo en la pestaña actual: aguanta recargar la página, pero al cerrar la pestaña o el navegador hay que volver a iniciar sesión.
+- Por ahora están listas las pantallas de acceso e inventario. Las demás opciones del menú muestran un aviso de "disponible próximamente".
+- Otros comandos: `npm run build` (genera la versión final en `frontend/dist/`) y `npm run lint` (revisa el código).
+
 ## Pruebas
 
 Desde `backend/`, con el entorno virtual activado:
@@ -121,6 +144,7 @@ Las pruebas usan la base local, pero corren dentro de una transacción que se de
 ## Problemas comunes
 
 - **PowerShell no deja ejecutar `Activate.ps1`:** ejecuta una vez `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+- **El frontend dice "No se pudo conectar con el servidor":** el backend está apagado o no corre en el puerto 8000. Enciéndelo con `uvicorn app.main:app --reload`.
 - **`/api/salud` responde 503:** PostgreSQL está apagado o algún dato de `backend/.env` está mal. El error real aparece en la consola de `uvicorn`.
 - **`RuntimeError: Falta la variable JWT_SECRETO`:** falta la clave de sesiones en `backend/.env` o tiene menos de 32 caracteres. Ver "Llenar `backend/.env`".
 - **`DLL load failed ... An Application Control policy has blocked this file` al arrancar o al correr `pytest`:** el **Smart App Control** de Windows 11 está bloqueando la librería de `psycopg` o la de `bcrypt`, que no vienen firmadas. Al equipo le funcionó apagarlo en *Seguridad de Windows → Control de aplicaciones y navegador → Smart App Control*. Es una protección de Windows: apagarla es decisión de cada quien, y en algunas versiones de Windows no se puede volver a encender sin restablecer el equipo.

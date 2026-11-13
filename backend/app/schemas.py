@@ -16,6 +16,7 @@ class PiezaSalida(BaseModel):
     stock_minimo: int
     precio_unitario: Decimal
     stock_bajo: bool
+    estado_stock: str
 
 
 class PiezaCrear(BaseModel):
@@ -35,6 +36,10 @@ class ResumenInventario(BaseModel):
     total_piezas: int
     stock_bajo: int
     valor_inventario: Decimal
+    # RN-16: cuántas piezas hay en cada nivel
+    suficiente: int
+    bajo: int
+    critico: int
 
 
 # ---------- Clientes ----------

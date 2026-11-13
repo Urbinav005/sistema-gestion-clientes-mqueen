@@ -55,8 +55,8 @@ petición → routers/<recurso>.py → (validación Pydantic) → lógica en la 
 | Método | Ruta | Fase | Reglas |
 |---|---|---|---|
 | GET | `/api/salud` | 0 | — |
-| GET | `/api/inventario` (`?buscar=`, `?stock_bajo=`) | 1–2 | RN-02 |
-| GET | `/api/inventario/resumen` | 2 | RN-02, RN-05 |
+| GET | `/api/inventario` (`?buscar=`, `?stock_bajo=`, `?estado_stock=`) | 1–2, 5 | RN-02, RN-16 |
+| GET | `/api/inventario/resumen` | 2, 5 | RN-02, RN-05, RN-16 |
 | GET/POST/PUT/DELETE | `/api/inventario/{id}` | 2 | RN-01, RN-03, RN-04 |
 | GET/POST | `/api/clientes` (`?buscar=`, `?incluir_inactivos=`) | 3 | — |
 | GET/PUT/DELETE | `/api/clientes/{id}` (`DELETE` = baja lógica) | 3 | — |
@@ -73,13 +73,25 @@ petición → routers/<recurso>.py → (validación Pydantic) → lógica en la 
 | GET | `/api/citas/{id}/ticket` | 3 | RN-09 |
 | POST | `/api/auth/login` | 4 | RN-13, RN-14, RN-15 |
 | GET | `/api/auth/yo` | 4 | RN-13 |
+| GET | `/api/resumen` | 6.5 | RN-02, RN-16 |
+
+Pendiente de construir: en la fase 5, cada pieza incluirá el campo `estado_stock` (`suficiente`, `bajo` o `critico`), calculado en el backend con RN-16, y `/api/inventario/resumen` dará el conteo de cada nivel. La tabla y las tarjetas del frontend usan ese mismo campo. `GET /api/resumen` (fase 6.5) alimenta la pantalla de resumen general; es de solo lectura y exige sesión.
 
 ## 5. Frontend
 
-- `src/api.js` concentra **todas** las llamadas `fetch`. Así, si cambia la URL del backend, se cambia en un solo lugar.
-- `src/pages/`: una página por pantalla (Inventario, NuevaRefaccion, Citas…).
-- `src/components/`: piezas que se reutilizan (Sidebar, TarjetaResumen, Badge…).
-- Diseño basado en los mockups: barra lateral verde oscuro `#15201A`, acento `#1F7A4D` y fuente Inter.
+- `src/api.js` concentra **todas** las llamadas `fetch`. Así, si cambia la URL del backend, se cambia en un solo lugar. También agrega la cabecera `Authorization` con el token de la sesión.
+- `src/pages/`: una página por pantalla (Login, Inventario, FormularioRefaccion, Clientes, Citas…).
+- `src/components/`: piezas que se reutilizan (BarraLateral, TarjetaResumen, Etiqueta…).
+- **Mockups:** las pantallas siguen los mockups de Figma de `docs/diseno/mockups/` (01 a 08), con los ajustes de su `README.md`. Si el mockup muestra un dato que el sistema no guarda, se ajusta la pantalla, no la base.
+- **Estilo visual** (el de Figma; reemplaza al verde que se había planeado): marca "Taller Auto Green" con logo "AG" y el texto "Sistema administrativo", barra lateral azul oscuro `#172130`, acento naranja `#F56329`, fondo `#F5F7FA`, tarjetas blancas y fuente Inter.
+- **Sesión:** el token se guarda en `sessionStorage`: aguanta recargar la página y se pierde al cerrar la pestaña. Sin token, la única pantalla visible es el login. Si el backend responde `401`, el frontend borra el token y regresa al login.
+- **Orden de construcción:**
+
+  | Fase | Pantallas |
+  |---|---|
+  | 5 | Layout con barra lateral, login (01), inventario (08) y alta y edición de refacción |
+  | 6 | Clientes (03, 04), vehículos (07 y su registro) y citas (05, 06 y detalle / ticket) |
+  | 6.5 | Resumen general (02) |
 
 ## 6. Lo que NO se usa (a propósito)
 

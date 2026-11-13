@@ -11,7 +11,7 @@ from app.models import CitaPieza
 
 cliente = TestClient(app)
 
-LLAVES_PIEZA = {"id_pieza", "nombre", "descripcion", "cantidad", "stock_minimo", "precio_unitario", "stock_bajo"}
+LLAVES_PIEZA = {"id_pieza", "nombre", "descripcion", "cantidad", "stock_minimo", "precio_unitario", "stock_bajo", "estado_stock"}
 LLAVES_CLIENTE = {"id_cliente", "nombre", "telefono", "correo", "creado_en", "activo"}
 LLAVES_CITA = {"id_cita", "id_vehiculo", "fecha", "motivo", "estado", "costo_mano_obra", "vehiculo", "total"}
 ESTADOS_VALIDOS = {"Pendiente", "En proceso", "Terminada", "Cancelada"}

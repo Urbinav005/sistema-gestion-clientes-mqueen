@@ -1,5 +1,5 @@
-# Pruebas de la fase 2 (P2-01 a P2-30): alta, consulta, edición, baja, búsqueda,
-# stock bajo y resumen del inventario. Usan los fixtures de conftest.py: nada queda guardado.
+# Pruebas del inventario: fase 2 (P2-01 a P2-39) y niveles de stock de la fase 5 (P5-01 a P5-08).
+# Usan los fixtures de conftest.py: nada queda guardado.
 from decimal import Decimal
 
 from sqlalchemy import select, text
@@ -324,3 +324,83 @@ def test_p2_39_id_fuera_de_rango(cliente):
     for respuesta in respuestas:
         assert respuesta.status_code == 404
         assert respuesta.json()["detail"] == "La pieza no existe"
+
+
+# ---------- Fase 5: niveles de stock (RN-16) ----------
+
+def estados_con_minimo(cliente, prefijo, stock_minimo, cantidades):
+    """Crea una pieza por cantidad y devuelve las piezas creadas, en el mismo orden."""
+    return [
+        crear(cliente, nombre=f"{prefijo} {cantidad}", cantidad=cantidad, stock_minimo=stock_minimo)
+        for cantidad in cantidades
+    ]
+
+
+def test_p5_01_niveles_con_minimo_par(cliente):
+    piezas = estados_con_minimo(cliente, "PRUEBA Nivel par", 6, [0, 3, 4, 6, 7])
+    assert [p["estado_stock"] for p in piezas] == ["critico", "critico", "bajo", "bajo", "suficiente"]
+
+
+def test_p5_02_niveles_con_minimo_impar(cliente):
+    piezas = estados_con_minimo(cliente, "PRUEBA Nivel impar", 5, [2, 3, 5, 6])
+    assert [p["estado_stock"] for p in piezas] == ["critico", "bajo", "bajo", "suficiente"]
+
+
+def test_p5_03_niveles_con_minimo_cero_y_uno(cliente):
+    cero_cero = crear(cliente, nombre="PRUEBA Minimo 0 cant 0", cantidad=0, stock_minimo=0)
+    cero_uno = crear(cliente, nombre="PRUEBA Minimo 0 cant 1", cantidad=1, stock_minimo=0)
+    uno_uno = crear(cliente, nombre="PRUEBA Minimo 1 cant 1", cantidad=1, stock_minimo=1)
+    assert cero_cero["estado_stock"] == "critico"
+    assert cero_uno["estado_stock"] == "suficiente"
+    assert uno_uno["estado_stock"] == "bajo"
+
+
+def test_p5_04_stock_bajo_coincide_con_estado(cliente):
+    piezas = estados_con_minimo(cliente, "PRUEBA Coincide", 6, [0, 3, 4, 6, 7])
+    for pieza in piezas:
+        assert pieza["stock_bajo"] == (pieza["estado_stock"] in ("bajo", "critico")), pieza
+
+
+def test_p5_05_resumen_cuenta_cada_nivel(cliente):
+    antes = cliente.get(f"{URL}/resumen").json()
+    crear(cliente, nombre="PRUEBA Resumen critica", cantidad=1, stock_minimo=6)
+    crear(cliente, nombre="PRUEBA Resumen baja", cantidad=5, stock_minimo=6)
+    crear(cliente, nombre="PRUEBA Resumen suficiente", cantidad=9, stock_minimo=6)
+    despues = cliente.get(f"{URL}/resumen").json()
+
+    assert despues["critico"] == antes["critico"] + 1
+    assert despues["bajo"] == antes["bajo"] + 1
+    assert despues["suficiente"] == antes["suficiente"] + 1
+    assert despues["total_piezas"] == antes["total_piezas"] + 3
+    assert despues["stock_bajo"] == antes["stock_bajo"] + 2
+
+
+def test_p5_06_resumen_real_cuadra(cliente):
+    resumen = cliente.get(f"{URL}/resumen").json()
+    assert resumen["suficiente"] + resumen["bajo"] + resumen["critico"] == resumen["total_piezas"]
+    assert resumen["bajo"] + resumen["critico"] == resumen["stock_bajo"]
+
+
+def test_p5_07_filtro_por_estado(cliente):
+    critica = crear(cliente, nombre="PRUEBA Filtro critica", cantidad=0, stock_minimo=6)
+    baja = crear(cliente, nombre="PRUEBA Filtro baja", cantidad=4, stock_minimo=6)
+    suficiente = crear(cliente, nombre="PRUEBA Filtro suficiente", cantidad=7, stock_minimo=6)
+
+    def ids(estado):
+        respuesta = cliente.get(URL, params={"buscar": "PRUEBA", "estado_stock": estado})
+        assert respuesta.status_code == 200
+        return [p["id_pieza"] for p in respuesta.json()]
+
+    assert ids("critico") == [critica["id_pieza"]]
+    assert ids("bajo") == [baja["id_pieza"]]
+    assert ids("suficiente") == [suficiente["id_pieza"]]
+    # Se limpia y se pasa a minúsculas: responde igual que "critico"
+    assert ids(" CRITICO ") == ids("critico")
+
+
+def test_p5_08_filtro_de_estado_invalido(cliente):
+    respuesta = cliente.get(URL, params={"estado_stock": "otro"})
+    assert respuesta.status_code == 400
+    mensaje = "El filtro de estado solo acepta: suficiente, bajo o critico"
+    assert respuesta.json()["detail"] == mensaje
+    assert tiene_error(respuesta, "estado_stock", mensaje)
