@@ -8,3 +8,7 @@ python-dotenv>=1.0
 pytest>=8
 # httpx: lo necesita el TestClient de FastAPI para las pruebas
 httpx>=0.27
+# bcrypt: guardar y verificar contraseñas con hash seguro (RN-15)
+bcrypt>=4.1,<6
+# PyJWT: crear y verificar los tokens de sesión
+PyJWT>=2.8,<3

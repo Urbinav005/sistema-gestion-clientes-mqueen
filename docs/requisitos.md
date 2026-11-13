@@ -15,7 +15,7 @@
 | RF-08 | Agendar citas y cambiar su estado | RN-06, RN-10, RN-11 | 3 | Backend listo (pantalla en fase 6) |
 | RF-09 | Registrar las refacciones usadas en una cita y descontarlas del stock | RN-01, RN-07, RN-08 | 3 | Backend listo (pantalla en fase 6) |
 | RF-10 | Generar el ticket o nota de servicio con su total | RN-09 | 3 | Backend listo (pantalla en fase 6) |
-| RF-11 | Iniciar sesión como administrador | RN-13, RN-14, RN-15 | 4 | Pendiente |
+| RF-11 | Iniciar sesión como administrador | RN-13, RN-14, RN-15 | 4 | Backend listo (pantalla en fase 6) |
 | RF-12 | Consultar el historial de servicios de un vehículo | — | 3 | Backend listo (pantalla en fase 6) |
 
 ## Requisitos no funcionales

@@ -71,14 +71,42 @@ cd backend
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-Copy-Item .env.example .env      # después abre .env y pon tu contraseña real
+Copy-Item .env.example .env      # después abre .env y llénalo (ver abajo)
 uvicorn app.main:app --reload
 ```
 
-Para comprobar que funciona:
+### Llenar `backend/.env`
 
-- http://localhost:8000/api/salud debe mostrar `{"bd":"ok","piezas":<n>}`.
+`.env` guarda los datos privados de cada computadora y **nunca** se sube al repositorio.
+
+1. Pon la contraseña de tu PostgreSQL en `DB_PASSWORD`.
+2. Genera una clave para firmar las sesiones y ponla en `JWT_SECRETO`. Cada quien genera la suya:
+
+   ```powershell
+   python -c "import secrets; print(secrets.token_urlsafe(48))"
+   ```
+
+   Copia el texto completo (puede empezar o terminar con `-` o `_`) y pégalo entre comillas: `JWT_SECRETO="..."`. Debe tener al menos 32 caracteres; si falta, la API no arranca.
+3. `JWT_MINUTOS` es opcional: cuántos minutos dura una sesión (por defecto 480, es decir, 8 horas).
+
+### Crear al administrador
+
+La API solo la usa el administrador, que se registra con un script. Con el entorno virtual activado, desde `backend/`:
+
+```powershell
+python crear_admin.py
+```
+
+Pide el nombre, el usuario y la contraseña (dos veces). La contraseña no se ve al escribirla, pero sí se está escribiendo. Debe tener al menos 8 caracteres. Se guarda como un hash bcrypt, nunca en texto plano. Si el usuario ya existe, el script le cambia el nombre y la contraseña; así también se recupera una contraseña olvidada.
+
+### Comprobar que funciona
+
+- http://localhost:8000/api/salud debe mostrar `{"bd":"ok","piezas":<n>}`. Esta ruta no pide sesión.
 - http://localhost:8000/docs muestra la documentación interactiva de la API.
+- Las demás rutas piden sesión. En `/docs`:
+  1. `POST /api/auth/login` con el usuario y la contraseña del administrador. Copia el `token` de la respuesta.
+  2. Botón **Authorize** (arriba a la derecha), pega el token y acepta.
+  3. Ya puedes probar las demás rutas. Sin token responden `401`.
 
 ## Pruebas
 
@@ -94,7 +122,8 @@ Las pruebas usan la base local, pero corren dentro de una transacción que se de
 
 - **PowerShell no deja ejecutar `Activate.ps1`:** ejecuta una vez `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 - **`/api/salud` responde 503:** PostgreSQL está apagado o algún dato de `backend/.env` está mal. El error real aparece en la consola de `uvicorn`.
-- **`DLL load failed ... An Application Control policy has blocked this file` al arrancar o al correr `pytest`:** el **Smart App Control** de Windows 11 está bloqueando la librería de `psycopg`, que no viene firmada. Al equipo le funcionó apagarlo en *Seguridad de Windows → Control de aplicaciones y navegador → Smart App Control*. Es una protección de Windows: apagarla es decisión de cada quien, y en algunas versiones de Windows no se puede volver a encender sin restablecer el equipo.
+- **`RuntimeError: Falta la variable JWT_SECRETO`:** falta la clave de sesiones en `backend/.env` o tiene menos de 32 caracteres. Ver "Llenar `backend/.env`".
+- **`DLL load failed ... An Application Control policy has blocked this file` al arrancar o al correr `pytest`:** el **Smart App Control** de Windows 11 está bloqueando la librería de `psycopg` o la de `bcrypt`, que no vienen firmadas. Al equipo le funcionó apagarlo en *Seguridad de Windows → Control de aplicaciones y navegador → Smart App Control*. Es una protección de Windows: apagarla es decisión de cada quien, y en algunas versiones de Windows no se puede volver a encender sin restablecer el equipo.
 
 ## Aviso
 

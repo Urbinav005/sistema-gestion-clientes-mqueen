@@ -174,3 +174,26 @@ class CitaEstado(BaseModel):
 class PiezaDeCita(BaseModel):
     id_pieza: int
     cantidad: int
+
+
+# ---------- Inicio de sesión ----------
+
+class LoginEntrada(BaseModel):
+    usuario: str
+    password: str
+
+
+class AdminSalida(BaseModel):
+    # Sin password_hash: nunca sale de la API
+    model_config = ConfigDict(from_attributes=True)
+
+    id_admin: int
+    nombre: str
+    usuario: str
+
+
+class TokenSalida(BaseModel):
+    token: str
+    tipo: str
+    expira_en_minutos: int
+    administrador: AdminSalida

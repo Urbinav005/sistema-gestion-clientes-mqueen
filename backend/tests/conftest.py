@@ -6,6 +6,27 @@ from sqlalchemy.orm import Session
 
 from app.db import engine, get_db
 from app.main import app
+from app.models import Administrador
+from app.seguridad import admin_actual
+
+
+@pytest.fixture(autouse=True)
+def admin_de_prueba():
+    """En todas las pruebas, las rutas protegidas aceptan a un administrador de mentira."""
+
+    def admin_falso():
+        # No se guarda en la base: solo existe durante la prueba
+        return Administrador(id_admin=0, nombre="PRUEBA Admin falso", usuario="prueba_falso")
+
+    app.dependency_overrides[admin_actual] = admin_falso
+    yield
+    app.dependency_overrides.pop(admin_actual, None)
+
+
+@pytest.fixture
+def login_real(admin_de_prueba):
+    """Quita el administrador de mentira: la protección funciona de verdad."""
+    app.dependency_overrides.pop(admin_actual, None)
 
 
 @pytest.fixture
