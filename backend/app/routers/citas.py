@@ -128,6 +128,9 @@ def listar_citas(
         consulta = consulta.where(Cita.fecha >= inicio, Cita.fecha < inicio + timedelta(days=1))
 
     if id_vehiculo is not None:
+        # Un id fuera de rango no puede existir: lista vacía sin consultar la base
+        if id_vehiculo < 1 or id_vehiculo > ID_MAXIMO:
+            return []
         consulta = consulta.where(Cita.id_vehiculo == id_vehiculo)
 
     return db.scalars(consulta).all()

@@ -65,7 +65,7 @@ El estilo de Figma es el oficial del sistema. Colores medidos sobre las capturas
 
 - Se quita la columna **"Estado"**.
 - Se quita el filtro **"Todos los clientes"**. Queda el buscador y el botón "Nuevo cliente".
-- La lista muestra solo clientes activos.
+- Por omisión, la lista muestra solo clientes activos. Una casilla "Mostrar dados de baja" muestra también los dados de baja, con una etiqueta gris y la acción "Reactivar".
 
 ### 04 · Registrar cliente
 
@@ -89,7 +89,10 @@ El estilo de Figma es el oficial del sistema. Colores medidos sobre las capturas
 
 ### 07 · Vehículos
 
-- Sin cambios en la lista.
+- Se agregan las acciones "Historial", "Editar" y "Dar de baja" en cada renglón.
+- El buscador también encuentra vehículos por el nombre de su propietario.
+- "Última visita" es la fecha de la cita más reciente En proceso o Terminada.
+- La misma casilla "Mostrar dados de baja" que en Clientes, con la acción "Reactivar".
 - El botón "Registrar vehículo" abre una pantalla que no está en Figma (ver "Pantallas que faltan").
 
 ### 08 · Inventario

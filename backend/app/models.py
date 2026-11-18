@@ -30,6 +30,11 @@ class Cliente(Base):
 
     vehiculos: Mapped[list["Vehiculo"]] = relationship(back_populates="cliente")
 
+    @property
+    def total_vehiculos(self):
+        # Solo cuentan los vehículos activos (los dados de baja no se muestran)
+        return sum(1 for vehiculo in self.vehiculos if vehiculo.activo)
+
 
 class Vehiculo(Base):
     __tablename__ = "vehiculos"
@@ -48,6 +53,12 @@ class Vehiculo(Base):
 
     cliente: Mapped["Cliente"] = relationship(back_populates="vehiculos")
     citas: Mapped[list["Cita"]] = relationship(back_populates="vehiculo")
+
+    @property
+    def ultima_visita(self):
+        # Una visita es una cita en la que el vehículo sí estuvo en el taller
+        fechas = [cita.fecha for cita in self.citas if cita.estado in ("En proceso", "Terminada")]
+        return max(fechas) if fechas else None
 
 
 class Cita(Base):

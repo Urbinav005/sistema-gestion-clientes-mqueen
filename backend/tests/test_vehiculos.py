@@ -1,5 +1,5 @@
-# Pruebas de la fase 3 (P3-11 a P3-19): alta, validaciones, placas repetidas, filtros,
-# edición, baja lógica, reactivación e historial de vehículos. Nada queda guardado.
+# Pruebas de vehículos: fase 3 (P3-11 a P3-19 y P3-44) y fase 6 (P6-03 a P6-07).
+# Alta, placas, filtros, baja, reactivación, historial y última visita. Nada queda guardado.
 from decimal import Decimal
 from itertools import count
 
@@ -177,3 +177,84 @@ def test_p3_19_historial_con_totales(cliente):
     assert [c["id_cita"] for c in historial] == [reciente["id_cita"], vieja["id_cita"]]
     assert Decimal(historial[0]["total"]) == Decimal("300.00")
     assert Decimal(historial[1]["total"]) == Decimal("0.00")
+
+
+# ---------- Mejora de la fase 3: placas de un vehículo cuyo cliente está de baja ----------
+
+def test_p3_44_placas_con_cliente_dado_de_baja(cliente):
+    dueno = crear_cliente(cliente, "PRUEBA Dueño de baja")
+    vehiculo = crear_vehiculo(cliente, dueno["id_cliente"])
+    cliente.delete(f"/api/clientes/{dueno['id_cliente']}")
+
+    otro = crear_cliente(cliente, "PRUEBA Otro dueño")
+    respuesta = cliente.post(URL, json=datos_vehiculo(otro["id_cliente"], vehiculo["placas"]))
+    assert respuesta.status_code == 409
+    assert respuesta.json()["detail"].endswith("Reactiva al cliente.")
+
+
+# ---------- Fase 6: última visita, búsqueda por cliente y cliente de baja ----------
+
+def test_p6_03_ultima_visita_solo_con_cita_en_proceso(cliente):
+    dueno = crear_cliente(cliente)
+    vehiculo = crear_vehiculo(cliente, dueno["id_cliente"])
+    url_vehiculo = f"{URL}/{vehiculo['id_vehiculo']}"
+    assert vehiculo["ultima_visita"] is None
+
+    cita = crear_cita(cliente, vehiculo["id_vehiculo"], "2031-03-05T10:30:00")
+    assert cliente.get(url_vehiculo).json()["ultima_visita"] is None
+
+    cliente.put(f"/api/citas/{cita['id_cita']}/estado", json={"estado": "En proceso"})
+    assert cliente.get(url_vehiculo).json()["ultima_visita"] == "2031-03-05T10:30:00"
+
+
+def test_p6_04_cita_cancelada_no_es_visita(cliente):
+    dueno = crear_cliente(cliente)
+    vehiculo = crear_vehiculo(cliente, dueno["id_cliente"])
+    terminada = crear_cita(cliente, vehiculo["id_vehiculo"], "2031-04-01T09:00:00")
+    cancelada = crear_cita(cliente, vehiculo["id_vehiculo"], "2031-05-01T09:00:00")
+    cliente.put(f"/api/citas/{terminada['id_cita']}/estado", json={"estado": "En proceso"})
+    cliente.put(f"/api/citas/{terminada['id_cita']}/estado", json={"estado": "Terminada"})
+    cliente.put(f"/api/citas/{cancelada['id_cita']}/estado", json={"estado": "Cancelada"})
+
+    consultado = cliente.get(f"{URL}/{vehiculo['id_vehiculo']}").json()
+    assert consultado["ultima_visita"] == "2031-04-01T09:00:00"
+
+
+def test_p6_05_ultima_visita_es_la_mas_reciente(cliente):
+    dueno = crear_cliente(cliente)
+    vehiculo = crear_vehiculo(cliente, dueno["id_cliente"])
+    vieja = crear_cita(cliente, vehiculo["id_vehiculo"], "2031-06-01T09:00:00")
+    reciente = crear_cita(cliente, vehiculo["id_vehiculo"], "2031-07-01T16:00:00")
+    cliente.put(f"/api/citas/{vieja['id_cita']}/estado", json={"estado": "En proceso"})
+    cliente.put(f"/api/citas/{vieja['id_cita']}/estado", json={"estado": "Terminada"})
+    cliente.put(f"/api/citas/{reciente['id_cita']}/estado", json={"estado": "En proceso"})
+
+    esperada = "2031-07-01T16:00:00"
+    assert cliente.get(f"{URL}/{vehiculo['id_vehiculo']}").json()["ultima_visita"] == esperada
+    lista = cliente.get(URL, params={"id_cliente": dueno["id_cliente"]}).json()
+    assert [v["ultima_visita"] for v in lista] == [esperada]
+
+
+def test_p6_06_buscar_por_nombre_del_cliente(cliente):
+    dueno = crear_cliente(cliente, "PRUEBA Ramón Núñez")
+    vehiculo = crear_vehiculo(cliente, dueno["id_cliente"])
+
+    por_cliente = cliente.get(URL, params={"buscar": "ramón núñez"}).json()
+    por_placas = cliente.get(URL, params={"buscar": vehiculo["placas"]}).json()
+    for lista in (por_cliente, por_placas):
+        assert [v["id_vehiculo"] for v in lista].count(vehiculo["id_vehiculo"]) == 1
+
+
+def test_p6_07_activo_del_cliente_en_el_vehiculo(cliente):
+    dueno = crear_cliente(cliente, "PRUEBA Cliente corto")
+    vehiculo = crear_vehiculo(cliente, dueno["id_cliente"])
+    url_vehiculo = f"{URL}/{vehiculo['id_vehiculo']}"
+    assert cliente.get(url_vehiculo).json()["cliente"]["activo"] is True
+
+    cliente.delete(f"/api/clientes/{dueno['id_cliente']}")
+    assert cliente.get(url_vehiculo).json()["cliente"]["activo"] is False
+
+    con_inactivos = cliente.get(URL, params={"incluir_inactivos": "true"}).json()
+    encontrado = next(v for v in con_inactivos if v["id_vehiculo"] == vehiculo["id_vehiculo"])
+    assert encontrado["activo"] is True
+    assert encontrado["cliente"]["activo"] is False

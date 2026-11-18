@@ -1,5 +1,5 @@
-# Pruebas de la fase 3 (P3-01 a P3-10): alta, búsqueda, consulta, edición, baja lógica
-# y reactivación de clientes. Usan los fixtures de conftest.py: nada queda guardado.
+# Pruebas de clientes: fase 3 (P3-01 a P3-10) y número de vehículos de la fase 6 (P6-01, P6-02).
+# Alta, búsqueda, edición, baja lógica y reactivación. Usan los fixtures de conftest.py: nada queda guardado.
 from itertools import count
 
 URL = "/api/clientes"
@@ -141,3 +141,28 @@ def test_p3_10_baja_del_cliente_oculta_sus_vehiculos(cliente):
     cliente.post(f"{URL}/{nuevo['id_cliente']}/reactivar")
     visibles = cliente.get("/api/vehiculos", params=filtro).json()
     assert [v["id_vehiculo"] for v in visibles] == [vehiculo["id_vehiculo"]]
+
+
+# ---------- Fase 6: cuántos vehículos tiene cada cliente ----------
+
+def test_p6_01_total_vehiculos(cliente):
+    nuevo = crear_cliente(cliente, "PRUEBA Total vehiculos")
+    url_cliente = f"{URL}/{nuevo['id_cliente']}"
+    assert cliente.get(url_cliente).json()["total_vehiculos"] == 0
+
+    primero = crear_vehiculo(cliente, nuevo["id_cliente"])
+    crear_vehiculo(cliente, nuevo["id_cliente"])
+    assert cliente.get(url_cliente).json()["total_vehiculos"] == 2
+
+    # Los vehículos dados de baja no cuentan
+    cliente.delete(f"/api/vehiculos/{primero['id_vehiculo']}")
+    assert cliente.get(url_cliente).json()["total_vehiculos"] == 1
+
+
+def test_p6_02_total_vehiculos_en_la_lista(cliente):
+    nuevo = crear_cliente(cliente, "PRUEBA Lista con vehiculos")
+    crear_vehiculo(cliente, nuevo["id_cliente"])
+    lista = cliente.get(URL, params={"buscar": "PRUEBA"}).json()
+    en_lista = next(c for c in lista if c["id_cliente"] == nuevo["id_cliente"])
+    por_id = cliente.get(f"{URL}/{nuevo['id_cliente']}").json()
+    assert en_lista["total_vehiculos"] == por_id["total_vehiculos"] == 1

@@ -14,13 +14,26 @@ const SECCIONES = {
   '/inventario': 'Inventario',
 }
 
+// Subrutas: [patrón de la ruta, texto de la barra superior]
+const SUBRUTAS = [
+  [/^\/inventario\/nueva$/, 'Inventario / Nueva refacción'],
+  [/^\/inventario\/[^/]+\/editar$/, 'Inventario / Editar refacción'],
+  [/^\/clientes\/nuevo$/, 'Clientes / Registrar cliente'],
+  [/^\/clientes\/[^/]+\/editar$/, 'Clientes / Editar cliente'],
+  [/^\/vehiculos\/nuevo$/, 'Vehículos / Registrar vehículo'],
+  [/^\/vehiculos\/[^/]+\/editar$/, 'Vehículos / Editar vehículo'],
+  [/^\/vehiculos\/[^/]+\/historial$/, 'Vehículos / Historial'],
+  [/^\/citas\/nueva$/, 'Citas / Agendar cita'],
+  [/^\/citas\/[^/]+\/editar$/, 'Citas / Editar cita'],
+  [/^\/citas\/[^/]+$/, 'Citas / Detalle'],
+]
+
 // Texto de la barra superior según la ruta actual
 function textoUbicacion(ruta) {
-  if (ruta === '/inventario/nueva') {
-    return 'Inventario / Nueva refacción'
-  }
-  if (ruta.startsWith('/inventario/') && ruta.endsWith('/editar')) {
-    return 'Inventario / Editar refacción'
+  for (const [patron, texto] of SUBRUTAS) {
+    if (patron.test(ruta)) {
+      return texto
+    }
   }
   return SECCIONES[ruta] || ''
 }

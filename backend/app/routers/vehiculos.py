@@ -76,10 +76,12 @@ def revisar_placas_repetidas(db, placas, id_excluir=None):
         return
 
     # Un vehículo cuenta como activo solo si él y su cliente están activos
-    if otro.activo and otro.cliente.activo:
-        mensaje = "Ya existe un vehículo con esas placas"
-    else:
+    if not otro.activo:
         mensaje = "Ya existe un vehículo con esas placas, pero está dado de baja. Reactívalo."
+    elif not otro.cliente.activo:
+        mensaje = "Ya existe un vehículo con esas placas, pero su cliente está dado de baja. Reactiva al cliente."
+    else:
+        mensaje = "Ya existe un vehículo con esas placas"
     raise ErrorApi(409, mensaje, [{"campo": "placas", "mensaje": mensaje}])
 
 
@@ -101,6 +103,9 @@ def listar_vehiculos(
         consulta = consulta.where(Vehiculo.activo.is_(True), Cliente.activo.is_(True))
 
     if id_cliente is not None:
+        # Un id fuera de rango no puede existir: lista vacía sin consultar la base
+        if id_cliente < 1 or id_cliente > ID_MAXIMO:
+            return []
         consulta = consulta.where(Vehiculo.id_cliente == id_cliente)
 
     if buscar is not None:
@@ -111,6 +116,8 @@ def listar_vehiculos(
                     Vehiculo.placas.icontains(texto, autoescape=True),
                     Vehiculo.marca.icontains(texto, autoescape=True),
                     Vehiculo.modelo.icontains(texto, autoescape=True),
+                    # También por el nombre del propietario (la consulta ya une con clientes)
+                    Cliente.nombre.icontains(texto, autoescape=True),
                 )
             )
 

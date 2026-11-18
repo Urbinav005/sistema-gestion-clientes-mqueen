@@ -37,6 +37,9 @@ def traducir_tipo(tipo):
         return "Debe ser texto"
     if tipo.startswith("bool_"):
         return "Debe ser verdadero o falso"
+    # Cubre date_... y datetime_...
+    if tipo.startswith("date"):
+        return "Debe ser una fecha válida"
     return "Valor no válido"
 
 

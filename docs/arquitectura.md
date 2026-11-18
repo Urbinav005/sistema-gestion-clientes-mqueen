@@ -61,7 +61,7 @@ petición → routers/<recurso>.py → (validación Pydantic) → lógica en la 
 | GET/POST | `/api/clientes` (`?buscar=`, `?incluir_inactivos=`) | 3 | — |
 | GET/PUT/DELETE | `/api/clientes/{id}` (`DELETE` = baja lógica) | 3 | — |
 | POST | `/api/clientes/{id}/reactivar` | 3 | — |
-| GET/POST | `/api/vehiculos` (`?buscar=`, `?id_cliente=`, `?incluir_inactivos=`) | 3 | RN-12 |
+| GET/POST | `/api/vehiculos` (`?buscar=` por placas, marca, modelo o nombre del cliente; `?id_cliente=`, `?incluir_inactivos=`) | 3, 6 | RN-12 |
 | GET/PUT/DELETE | `/api/vehiculos/{id}` (`DELETE` = baja lógica) | 3 | RN-12 |
 | POST | `/api/vehiculos/{id}/reactivar` | 3 | — |
 | GET | `/api/vehiculos/{id}/historial` | 3 | RN-09 |

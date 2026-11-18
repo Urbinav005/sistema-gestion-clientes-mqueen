@@ -1,4 +1,4 @@
-# Pruebas de la fase 3 (P3-20 a P3-42): citas, cambios de estado, piezas usadas con descuento
+# Pruebas de la fase 3 (P3-20 a P3-43 y P3-45): citas, cambios de estado, piezas usadas con descuento
 # y devolución de stock, y ticket. Usan los fixtures de conftest.py: nada queda guardado.
 from decimal import Decimal
 from itertools import count
@@ -383,3 +383,22 @@ def test_p3_42_datos_reales(cliente):
 
     primera = citas[0]
     assert ticket(cliente, primera["id_cita"])["total"] == primera["total"]
+
+
+# ---------- Mejoras de la fase 3: fechas mal escritas e ids enormes en los filtros ----------
+
+def test_p3_43_fecha_no_valida(cliente):
+    en_filtro = cliente.get(URL, params={"fecha": "31-12-2026"})
+    vehiculo = crear_vehiculo(cliente)
+    en_alta = cliente.post(URL, json={"id_vehiculo": vehiculo["id_vehiculo"], "fecha": "mañana", "motivo": "PRUEBA"})
+    for respuesta in (en_filtro, en_alta):
+        assert respuesta.status_code == 422
+        assert tiene_error(respuesta, "fecha", "Debe ser una fecha válida")
+
+
+def test_p3_45_filtros_con_id_enorme(cliente):
+    citas = cliente.get(URL, params={"id_vehiculo": 2147483648})
+    vehiculos = cliente.get("/api/vehiculos", params={"id_cliente": 2147483648})
+    for respuesta in (citas, vehiculos):
+        assert respuesta.status_code == 200
+        assert respuesta.json() == []

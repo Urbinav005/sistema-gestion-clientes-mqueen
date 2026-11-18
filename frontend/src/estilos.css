@@ -663,3 +663,298 @@ textarea:focus {
   color: var(--texto-gris);
   font-size: 12px;
 }
+
+/* ---------- Fase 6: listas de clientes y vehículos ---------- */
+
+.filtros {
+  align-items: center;
+}
+
+.filtros-boton {
+  margin-left: auto;
+}
+
+.casilla {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--texto-gris);
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.casilla input {
+  width: auto;
+}
+
+.etiqueta-gris {
+  background: var(--borde);
+  color: var(--texto-gris);
+}
+
+.etiqueta-junto {
+  margin-left: 10px;
+}
+
+.filtro-cliente {
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+.texto-chico {
+  font-size: 12px;
+}
+
+.pagina-subtitulo-separado {
+  margin-bottom: 20px;
+}
+
+.formulario-nota {
+  margin: 4px 0 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--borde);
+  color: var(--texto-gris);
+  font-size: 13px;
+}
+
+.campo-fijo {
+  padding: 11px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.nota {
+  margin: 12px 0;
+  color: var(--texto-gris);
+  font-size: 14px;
+}
+
+/* ---------- Etiquetas de estado de cita (RN-06) ---------- */
+
+.etiqueta-pendiente {
+  background: var(--amarillo-fondo);
+  color: var(--amarillo-texto);
+}
+
+.etiqueta-en-proceso {
+  background: var(--azul-fondo);
+  color: var(--azul-texto);
+}
+
+.etiqueta-terminada {
+  background: var(--verde-fondo);
+  color: var(--verde-texto);
+}
+
+.etiqueta-cancelada {
+  background: var(--rojo-fondo);
+  color: var(--rojo-texto);
+}
+
+/* ---------- Tira de la semana ---------- */
+
+.semana {
+  margin-bottom: 20px;
+}
+
+.semana-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.semana-mes {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.semana-navegacion {
+  display: flex;
+  gap: 8px;
+}
+
+.semana-navegacion .boton {
+  padding: 7px 12px;
+}
+
+.semana-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+.semana-dia {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: 78px;
+  padding: 12px 14px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--fondo);
+  color: var(--texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.semana-dia:hover {
+  border-color: var(--acento);
+}
+
+.semana-dia.elegido {
+  background: #feefe7;
+  border-color: #feefe7;
+  color: var(--acento);
+}
+
+.semana-dia-nombre {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.semana-dia-numero {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.semana-dia-hoy {
+  align-self: flex-end;
+  color: var(--acento);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ---------- Detalle de cita / ticket ---------- */
+
+.ticket .tarjeta + .tarjeta {
+  margin-top: 20px;
+}
+
+.ticket-titulo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ficha-datos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+  margin: 0;
+}
+
+.ficha-datos dt {
+  color: var(--texto-gris);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.ficha-datos dd {
+  margin: 4px 0 0;
+  font-size: 14px;
+}
+
+.ficha-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--borde);
+}
+
+.boton-peligro {
+  color: var(--rojo-texto);
+}
+
+.agregar-pieza {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--borde);
+}
+
+.agregar-pieza-campos {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.agregar-pieza-campos .boton {
+  margin-top: 25px;
+}
+
+.agregar-pieza-refaccion {
+  flex: 1;
+}
+
+.agregar-pieza-refaccion select {
+  width: 100%;
+}
+
+.agregar-pieza-cantidad {
+  width: 120px;
+}
+
+.totales {
+  width: 280px;
+  margin: 20px 0 0 auto;
+}
+
+.totales div {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+.totales dt {
+  color: var(--texto-gris);
+}
+
+.totales dd {
+  margin: 0;
+}
+
+.totales-total {
+  margin-top: 6px;
+  border-top: 1px solid var(--borde);
+}
+
+.totales .totales-total dt,
+.totales .totales-total dd {
+  padding-top: 6px;
+  color: var(--texto);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ---------- Impresión del ticket ---------- */
+
+@media print {
+  .barra-lateral,
+  .barra-superior,
+  .no-imprimir {
+    display: none !important;
+  }
+
+  body,
+  .contenido {
+    background: #ffffff;
+  }
+
+  .contenido {
+    padding: 0;
+  }
+
+  .tarjeta {
+    border: none;
+    padding: 0;
+  }
+}

@@ -105,3 +105,110 @@ export function actualizarPieza(id_pieza, datos) {
 export function eliminarPieza(id_pieza) {
   return pedir(`/inventario/${encodeURIComponent(id_pieza)}`, { metodo: 'DELETE' })
 }
+
+// Arma "ruta?a=1&b=2" solo con los parámetros que traen algo
+function conParametros(ruta, parametros) {
+  const consulta = new URLSearchParams()
+  for (const [nombre, valor] of Object.entries(parametros)) {
+    if (valor === undefined || valor === null || valor === false) {
+      continue
+    }
+    const texto = String(valor).trim()
+    if (texto !== '') {
+      consulta.set(nombre, texto)
+    }
+  }
+  const texto = consulta.toString()
+  return texto ? `${ruta}?${texto}` : ruta
+}
+
+// ---------- Clientes ----------
+
+export function listarClientes({ buscar, incluir_inactivos } = {}) {
+  return pedir(conParametros('/clientes', { buscar, incluir_inactivos }))
+}
+
+export function obtenerCliente(id) {
+  return pedir(`/clientes/${encodeURIComponent(id)}`)
+}
+
+export function crearCliente(datos) {
+  return pedir('/clientes', { metodo: 'POST', cuerpo: datos })
+}
+
+export function actualizarCliente(id, datos) {
+  return pedir(`/clientes/${encodeURIComponent(id)}`, { metodo: 'PUT', cuerpo: datos })
+}
+
+export function darDeBajaCliente(id) {
+  return pedir(`/clientes/${encodeURIComponent(id)}`, { metodo: 'DELETE' })
+}
+
+export function reactivarCliente(id) {
+  return pedir(`/clientes/${encodeURIComponent(id)}/reactivar`, { metodo: 'POST' })
+}
+
+// ---------- Vehículos ----------
+
+export function listarVehiculos({ buscar, id_cliente, incluir_inactivos } = {}) {
+  return pedir(conParametros('/vehiculos', { buscar, id_cliente, incluir_inactivos }))
+}
+
+export function obtenerVehiculo(id) {
+  return pedir(`/vehiculos/${encodeURIComponent(id)}`)
+}
+
+export function historialVehiculo(id) {
+  return pedir(`/vehiculos/${encodeURIComponent(id)}/historial`)
+}
+
+export function crearVehiculo(datos) {
+  return pedir('/vehiculos', { metodo: 'POST', cuerpo: datos })
+}
+
+export function actualizarVehiculo(id, datos) {
+  return pedir(`/vehiculos/${encodeURIComponent(id)}`, { metodo: 'PUT', cuerpo: datos })
+}
+
+export function darDeBajaVehiculo(id) {
+  return pedir(`/vehiculos/${encodeURIComponent(id)}`, { metodo: 'DELETE' })
+}
+
+export function reactivarVehiculo(id) {
+  return pedir(`/vehiculos/${encodeURIComponent(id)}/reactivar`, { metodo: 'POST' })
+}
+
+// ---------- Citas ----------
+
+export function listarCitas({ fecha, estado } = {}) {
+  return pedir(conParametros('/citas', { fecha, estado }))
+}
+
+export function crearCita(datos) {
+  return pedir('/citas', { metodo: 'POST', cuerpo: datos })
+}
+
+export function actualizarCita(id, datos) {
+  return pedir(`/citas/${encodeURIComponent(id)}`, { metodo: 'PUT', cuerpo: datos })
+}
+
+export function cambiarEstadoCita(id, estado) {
+  return pedir(`/citas/${encodeURIComponent(id)}/estado`, { metodo: 'PUT', cuerpo: { estado } })
+}
+
+export function ticketCita(id) {
+  return pedir(`/citas/${encodeURIComponent(id)}/ticket`)
+}
+
+export function agregarPiezaCita(id, id_pieza, cantidad) {
+  return pedir(`/citas/${encodeURIComponent(id)}/piezas`, {
+    metodo: 'POST',
+    cuerpo: { id_pieza, cantidad },
+  })
+}
+
+export function quitarPiezaCita(id, id_pieza) {
+  return pedir(`/citas/${encodeURIComponent(id)}/piezas/${encodeURIComponent(id_pieza)}`, {
+    metodo: 'DELETE',
+  })
+}

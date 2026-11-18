@@ -50,6 +50,8 @@ class ClienteCorto(BaseModel):
     id_cliente: int
     nombre: str
     telefono: str
+    # Para saber si un vehículo no aparece porque su cliente está dado de baja
+    activo: bool
 
 
 class ClienteSalida(BaseModel):
@@ -61,6 +63,7 @@ class ClienteSalida(BaseModel):
     correo: str | None
     creado_en: datetime
     activo: bool
+    total_vehiculos: int
 
 
 class ClienteCrear(BaseModel):
@@ -99,6 +102,7 @@ class VehiculoSalida(BaseModel):
     kilometraje: int | None
     activo: bool
     cliente: ClienteCorto
+    ultima_visita: datetime | None
 
 
 class ClienteDetalle(ClienteSalida):
