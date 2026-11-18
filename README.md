@@ -128,7 +128,7 @@ Abre http://localhost:5173 e inicia sesión con el usuario y la contraseña del 
 
 - La aplicación siempre usa el puerto **5173**: es el único que la API autoriza (CORS). Si está ocupado, `npm run dev` se detiene con un error en vez de usar otro puerto.
 - La sesión se guarda solo en la pestaña actual: aguanta recargar la página, pero al cerrar la pestaña o el navegador hay que volver a iniciar sesión.
-- Están listas las pantallas de acceso, clientes, vehículos (con su historial), agenda de citas (con el detalle y el ticket de cada cita) e inventario. La opción "Resumen" del menú todavía muestra un aviso de "disponible próximamente".
+- Están listas todas las pantallas: acceso, resumen general (la pantalla de inicio), clientes, vehículos (con su historial), agenda de citas (con el detalle y el ticket de cada cita) e inventario.
 - Otros comandos: `npm run build` (genera la versión final en `frontend/dist/`) y `npm run lint` (revisa el código).
 
 ## Pruebas

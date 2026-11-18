@@ -13,7 +13,7 @@ import FormularioVehiculo from './pages/FormularioVehiculo.jsx'
 import HistorialVehiculo from './pages/HistorialVehiculo.jsx'
 import Inventario from './pages/Inventario.jsx'
 import Login from './pages/Login.jsx'
-import Proximamente from './pages/Proximamente.jsx'
+import Resumen from './pages/Resumen.jsx'
 import Vehiculos from './pages/Vehiculos.jsx'
 
 function App() {
@@ -29,11 +29,11 @@ function App() {
           </RutaProtegida>
         }
       >
-        <Route path="/" element={<Navigate to="/inventario" replace />} />
+        <Route path="/" element={<Navigate to="/resumen" replace />} />
         <Route path="/inventario" element={<Inventario />} />
         <Route path="/inventario/nueva" element={<FormularioRefaccion />} />
         <Route path="/inventario/:id_pieza/editar" element={<FormularioRefaccion />} />
-        <Route path="/resumen" element={<Proximamente titulo="Resumen" />} />
+        <Route path="/resumen" element={<Resumen />} />
 
         {/* Las rutas fijas (/nuevo, /nueva) van antes de las que llevan :id */}
         <Route path="/clientes" element={<Clientes />} />
@@ -51,7 +51,7 @@ function App() {
         <Route path="/citas/:id_cita/editar" element={<FormularioCita />} />
       </Route>
 
-      <Route path="*" element={<Navigate to="/inventario" replace />} />
+      <Route path="*" element={<Navigate to="/resumen" replace />} />
     </Routes>
   )
 }

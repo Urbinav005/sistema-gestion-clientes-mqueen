@@ -7,7 +7,7 @@ import { cerrarSesion, leerAdmin } from '../sesion.js'
 import BarraLateral from './BarraLateral.jsx'
 
 const SECCIONES = {
-  '/resumen': 'Resumen',
+  '/resumen': 'Resumen / Inicio',
   '/clientes': 'Clientes',
   '/citas': 'Citas',
   '/vehiculos': 'Vehículos',

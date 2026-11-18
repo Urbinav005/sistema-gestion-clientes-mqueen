@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.errores import registrar_manejadores
-from app.routers import auth, citas, clientes, inventario, salud, vehiculos
+from app.routers import auth, citas, clientes, inventario, resumen, salud, vehiculos
 from app.seguridad import admin_actual
 
 app = FastAPI(title="Mqueen · Inventario Auto Green")
@@ -30,3 +30,4 @@ app.include_router(inventario.router, prefix="/api", dependencies=protegida)
 app.include_router(clientes.router, prefix="/api", dependencies=protegida)
 app.include_router(vehiculos.router, prefix="/api", dependencies=protegida)
 app.include_router(citas.router, prefix="/api", dependencies=protegida)
+app.include_router(resumen.router, prefix="/api", dependencies=protegida)

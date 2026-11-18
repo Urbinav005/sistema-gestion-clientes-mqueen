@@ -1,6 +1,6 @@
 # Modelos Pydantic de salida: definen qué datos regresa la API en formato JSON.
 # El dinero va como Decimal (sale como texto "95.00"), nunca como float.
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict
@@ -206,3 +206,18 @@ class TokenSalida(BaseModel):
     tipo: str
     expira_en_minutos: int
     administrador: AdminSalida
+
+
+# ---------- Resumen general ----------
+
+class ResumenGeneral(BaseModel):
+    fecha: date
+    vehiculos_en_taller: int
+    citas_hoy: int
+    citas_hoy_pendientes: int
+    clientes_registrados: int
+    clientes_nuevos_mes: int
+    stock_bajo: int
+    stock_critico: int
+    proximas_citas: list[CitaSalida]
+    alertas_inventario: list[PiezaSalida]

@@ -958,3 +958,54 @@ textarea:focus {
     padding: 0;
   }
 }
+
+/* ---------- Resumen general ---------- */
+
+.tono-naranja {
+  background: #fff0e5;
+  color: var(--acento);
+}
+
+.resumen-columnas {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.resumen-tarjeta-encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.resumen-tarjeta-titulo {
+  margin-bottom: 2px;
+}
+
+.alertas {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alertas li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--borde);
+}
+
+.alertas li:last-child {
+  border-bottom: none;
+}
+
+.resumen-botones {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}

@@ -122,6 +122,12 @@ function conParametros(ruta, parametros) {
   return texto ? `${ruta}?${texto}` : ruta
 }
 
+// ---------- Resumen general ----------
+
+export function resumenGeneral() {
+  return pedir('/resumen')
+}
+
 // ---------- Clientes ----------
 
 export function listarClientes({ buscar, incluir_inactivos } = {}) {

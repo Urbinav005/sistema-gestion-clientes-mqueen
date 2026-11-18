@@ -73,9 +73,9 @@ petición → routers/<recurso>.py → (validación Pydantic) → lógica en la 
 | GET | `/api/citas/{id}/ticket` | 3 | RN-09 |
 | POST | `/api/auth/login` | 4 | RN-13, RN-14, RN-15 |
 | GET | `/api/auth/yo` | 4 | RN-13 |
-| GET | `/api/resumen` | 6.5 | RN-02, RN-16 |
+| GET | `/api/resumen` | 6.5 | RN-02, RN-06, RN-16 |
 
-Pendiente de construir: en la fase 5, cada pieza incluirá el campo `estado_stock` (`suficiente`, `bajo` o `critico`), calculado en el backend con RN-16, y `/api/inventario/resumen` dará el conteo de cada nivel. La tabla y las tarjetas del frontend usan ese mismo campo. `GET /api/resumen` (fase 6.5) alimenta la pantalla de resumen general; es de solo lectura y exige sesión.
+Cada pieza incluye el campo `estado_stock` (`suficiente`, `bajo` o `critico`), calculado en el backend con RN-16, y `/api/inventario/resumen` da el conteo de cada nivel. La tabla y las tarjetas del frontend usan ese mismo campo. `GET /api/resumen` alimenta la pantalla de resumen general (la de inicio): vehículos en taller, citas de hoy, clientes registrados, stock bajo y crítico, las próximas citas de hoy y hasta 5 alertas de inventario. Es de solo lectura y exige sesión; la condición de "crítico" se reutiliza de `inventario.py`.
 
 ## 5. Frontend
 

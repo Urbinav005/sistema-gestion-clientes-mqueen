@@ -1,5 +1,5 @@
 // Pantalla de acceso del administrador (mockup 01): usuario y contraseña.
-// Si el backend acepta, guarda la sesión y entra al inventario.
+// Si el backend acepta, guarda la sesión y entra al resumen general.
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { CLAVE_AVISO, iniciarSesion } from '../api.js'
@@ -23,7 +23,7 @@ function Login() {
 
   // Ya hay sesión: no tiene caso volver a entrar
   if (leerToken()) {
-    return <Navigate to="/inventario" replace />
+    return <Navigate to="/resumen" replace />
   }
 
   async function entrar(evento) {
@@ -47,7 +47,7 @@ function Login() {
     try {
       const respuesta = await iniciarSesion(usuario, password)
       guardarSesion(respuesta.token, respuesta.administrador)
-      navigate('/inventario', { replace: true })
+      navigate('/resumen', { replace: true })
     } catch (error) {
       setEntrando(false)
       if (error.estado === 401) {

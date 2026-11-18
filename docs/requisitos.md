@@ -17,7 +17,7 @@
 | RF-10 | Generar el ticket o nota de servicio con su total | RN-09 | 3 | Listo |
 | RF-11 | Iniciar sesión como administrador | RN-13, RN-14, RN-15 | 4 | Listo |
 | RF-12 | Consultar el historial de servicios de un vehículo | — | 3 | Listo |
-| RF-13 | Ver el resumen general del taller (vehículos en taller, citas de hoy, clientes registrados, próximas citas y alertas de inventario) | RN-02, RN-16 | 6.5 | Pendiente |
+| RF-13 | Ver el resumen general del taller (vehículos en taller, citas de hoy, clientes registrados, próximas citas y alertas de inventario) | RN-02, RN-16 | 6.5 | Listo |
 
 > Las pantallas siguen los mockups de `docs/diseno/mockups/`, con los ajustes que lista su `README.md`.
 
